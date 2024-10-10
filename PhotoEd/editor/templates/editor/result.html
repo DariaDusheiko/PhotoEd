@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PhotoEd</title>
+    <style>
+        #pic {
+          display: inline-block;
+        }
+
+        body {
+            background-color: #333;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+          display: flex;
+          justify-content: space-between;
+          background-color: #1f1e1e;
+          color: white;
+          padding: 15px 0;
+          text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .button_load {
+            background-color: transparent;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 1%;
+        }
+
+        .button_load:hover {
+            background-color: #FF0091;
+        }
+
+        .link {
+            margin-left: 2%;
+            display: inline-block;
+            background-color: #141414;
+            color: white;
+            padding: 8px 15px;
+            font-size: 13px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .link:hover {
+            background-color: #00EFFF;
+        }
+
+        .blu {
+            color: #00EFFF;
+        }
+
+        .red {
+            color: #FF0091;
+        }
+
+        .small_red {
+            font-size: 12px;
+            color: #FF0091;
+        }
+
+        .position_cent {
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            font-size: 12px;
+        }
+
+        .cent {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 60vw;
+        }
+
+        .cent img {
+          max-width: 100%;
+          object-fit: contain;
+        }
+
+        .use_button {
+            background-color: transparent;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 1%;
+            font-size: 10px;
+        }
+
+        input {
+            background-color: #9B9B9B;
+            accent-color: #FF0091;
+            text-color: white;
+        }
+
+        p {
+            margin-top: 35%;
+        }
+
+        .sides {
+            width: 15%;
+            margin-right: 5px;
+            margin-left: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sides img{
+            margin-top: 12px;
+        }
+
+        .filter_button {
+            background-color: #262626;
+            color: white;
+            border: solid 1px;
+            border-color: #00EFFF;
+            padding: 8px 15px;
+            margin: 0 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10%;
+            width: 70%;
+            font-size: 10px;
+        }
+
+        .number {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .number input {
+            margin-top: 20px;
+            border-radius: 10px;
+            background-color: #c7c7c7;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+
+    <script>
+        function changeNoise() {
+          const iseValue = document.getElementById("noiseLevel").value;
+          const img = document.getElementById("pic");
+          img.style.filter = `contrast(${iseValue}%) brightness(${iseValue}%)`;
+        }
+
+        function saveImage() {
+             const img = document.getElementById("pic");
+             const canvas = document.createElement("canvas");
+             const ctx = canvas.getContext("2d");
+             canvas.width = img.width;
+             canvas.height = img.height;
+             ctx.drawImage(img, 0, 0);
+             const link = document.createElement("a");
+             link.download = "filter_image.jpg";
+             link.href = canvas.toDataURL("image/jpg");
+             link.click();
+        }
+
+        function sepia() {
+            const sepiaValue = document.getElementById("sepiaLevel").value;
+            const img = document.getElementById("pic");
+            img.style.display = 'inline-block';
+            img.style.filter = `sepia(${sepiaValue}%)`;
+        }
+
+        function glitch() {
+            const glitchValue = document.getElementById("glitchLevel").value;
+            const img = document.getElementById("pic");
+            const randomOffset = Math.random() * 20;
+            img.style.display = 'inline-block';
+
+            img.style.filter = `
+                grayscale(${glitchValue}%)
+                hue-rotate(${randomOffset}deg)
+                blur(${glitchValue / 35}px)
+            `;
+        }
+        </script>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="header">
+            <button name="cancel" class="link">Отмена</button>
+            <h1><span class="blu">P</span><span>hoto</span><span class="red">E</span><span>d</span></h1>
+            <button onclick="saveImage()" name="download" class="button_load">Скачать изображение</button>
+        </div>
+
+
+        <div class="position_cent">
+            <div class="sides">
+                <button class="filter_button" name="original">Применить Оригинал</button>
+                <img src="{{ data.image_url }}" alt="Filtered Image" style="width: 40%;">
+                <button class="filter_button" name="white">Применить Белые края</button>
+                <img src="{{ data.white }}" alt="Filtered Image" style="width: 40%;">
+                <button class="filter_button" name="black">Применить Черные края</button>
+                <img src="{{ data.black }}" alt="Filtered Image" style="width: 40%;">
+                <button class="filter_button" name="crack_white">Применить Белые царапины</button>
+                <img src="{{ data.crack_white }}" alt="Filtered Image" style="width: 40%;">
+                <button class="filter_button" name="crack_black">Применить Черные царапины</button>
+                <img src="{{ data.crack_black }}" alt="Filtered Image" style="width: 40%;">
+                <button class="filter_button" name="new_black">Применить Черные потертости</button>
+                <img src="{{ data.new_black }}" alt="Filtered Image" style="width: 40%;">
+                <button class="filter_button" name="new_white">Применить Белые потертости</button>
+                <img src="{{ data.new_white }}" alt="Filtered Image" style="width: 40%;">
+            </div>
+
+            <div class="cent">
+                <img src="{{ data.my_image_url }}" alt="Filtered Image" id="pic" style="width: 100%;">
+            </div>
+
+            <div class="sides">
+                <p>Шум изображения: </p>
+                <input type="range" min="0" max="100" id="noiseLevel" name="noise_value" oninput="changeNoise()" value="100">
+                <button class="use_button" name="noise">Применить</button>
+
+                <p><span class="red">Настройте эффекты: </span></p>
+
+                <p>Сепия изображения: </p>
+                <input type="range" min="0" max="100" id="sepiaLevel" name="sepia_value" oninput="sepia()" value="1">
+                <button class="use_button" name="look_s">Посмотреть</button>
+                <img src="{{ data.sepia }}" alt=" Настройте значение" style="width: 60%;">
+                <button class="use_button" name="sepia">Применить</button>
+
+                <p class="red">Желтизна изображения: </p>
+                <input type="range" min="0" max="100" id="glitchLevel" name="glitch_value" oninput="glitch()" value="1">
+                <button class="use_button" name="look_g">Посмотреть</button>
+                <img src="{{ data.glitch }}" alt=" Настройте значение" style="width: 60%;">
+                <button class="use_button" name="glitch">Применить</button>
+
+                <p>Изменить количество царапин: </p><span class="small_red">можно изменить до применения эффекта</span>
+                <div class="number">
+                    <input type="number" id="count_crack" name="crack" min="0" max="300" value="60" style="margin-top: 20px;"/>
+                    <button class="use_button" style="margin-top: 17px;"  name="value_crack">Применить</button>
+                </div>
+
+                <p>Изменить количество потертостей: </p><span class="small_red">можно изменить до применения эффекта</span>
+                <div class="number">
+                    <input type="number" id="count_point" name="new" min="0" max="700" value="300"/>
+                    <button class="use_button" style="margin-top: 17px;" name="value_new">Применить</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

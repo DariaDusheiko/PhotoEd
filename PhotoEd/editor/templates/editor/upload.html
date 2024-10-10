@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PhotoEd</title>
+    <style>
+        body {
+            background-color: #333;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .form-container {
+            color: #fff;
+            font-family: Arial, sans-serif;
+            width: 25%;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #9B9B9B;
+            border: 1px solid #333;
+            border-radius: 80px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            align-items: center;
+        }
+
+        label {
+            color: #9B9B9B;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 17px;
+            font-size: 16px;
+            color: #333;
+            background-color: #A5EAEC;
+            width: 75%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #FF0091;
+            color: white;
+            width: 110px;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #00EFFF;
+            color: #333;
+        }
+
+        .blu {
+            color: #00EFFF;
+        }
+
+        .red {
+            color: #FF0091;
+        }
+
+        .error {
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><span class="blu">P</span><span>hoto</span><span class="red">E</span><span>d</span></h1>
+    </div>
+    <div class="form-container">
+        <h1>Загрузите изображение</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Загрузить</button>
+        </form>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
